@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#14100f;--surface:rgba(32,24,20,.9);--surface2:#241b18;--line:#4a3a30;--fg:#fbf1e6;--dim:#d9c6b4;--ember:#ff7a59;--gold:#ffb347;--good:#9be29b;--bad:#ff8a7a;
+:root{--bg:#0e1320;--surface:rgba(18,26,40,.9);--surface2:#182133;--line:#2c3c58;--fg:#e9f1fb;--dim:#b9c7da;--ember:#6a86e8;--gold:#8fd3ff;--good:#9be29b;--bad:#ff8a7a;
 --display:'Space Grotesk',Inter,system-ui,sans-serif;--sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -19,7 +19,7 @@ padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(
 /* the dim sadpad behind the page */
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;image-rendering:pixelated;opacity:.8;pointer-events:none}
 [hidden]{display:none!important}
-.veil{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(14,10,8,.55) 0%,rgba(14,10,8,.25) 45%,rgba(14,10,8,.05) 100%)}
+.veil{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(6,10,18,.55) 0%,rgba(6,10,18,.25) 45%,rgba(6,10,18,.05) 100%)}
 .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding-block:28px 160px}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:20px}
@@ -35,11 +35,11 @@ h2{font-family:var(--sans);font-weight:800;font-size:24px;letter-spacing:.01em;m
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:16px}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .btn{font:700 15px var(--sans);border-radius:99px;padding:12px 22px;border:1px solid var(--line);background:var(--surface2);color:var(--fg);cursor:pointer}
-.btn.go{background:linear-gradient(135deg,var(--gold),var(--ember));color:#2a1608;border:0}
+.btn.go{background:linear-gradient(135deg,var(--gold),var(--ember));color:#0b1a2a;border:0}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 label{display:block;font:600 13px var(--sans);color:var(--dim);margin-bottom:4px}
 label .rv{font-weight:400;opacity:.8;margin-left:6px}
-input[type=text],textarea,select{width:100%;font:500 15px var(--sans);color:var(--fg);background:#1a1412;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+input[type=text],textarea,select{width:100%;font:500 15px var(--sans);color:var(--fg);background:#111826;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
 textarea{min-height:72px;resize:vertical}
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 @media(max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
@@ -53,14 +53,14 @@ a.bear.launched{cursor:pointer}
 a.bear.launched:hover,a.bear.launched:focus-visible{border-color:var(--gold)}
 .bear small{font:500 13px var(--mono);color:var(--dim);overflow-wrap:anywhere}
 .bear.launched small{color:var(--gold)}
-.bear.dog{border-bottom-color:#e8913a}.bear.cat{border-bottom-color:#9a7cff}
-.board{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}.board .side{display:grid;gap:2px}.board .side.r{text-align:right}.board .side b{font:800 clamp(22px,5vw,34px) var(--display)}.board .side span{font:500 13px var(--mono);color:var(--dim)}.board .vs{font:700 14px var(--mono);color:var(--dim)}.board .bar{grid-column:1/-1;display:flex;height:12px;border-radius:99px;overflow:hidden;background:#1a1412}.board .bar i{display:block;transition:width .6s}
+.bear.weeper{border-bottom-color:#5aa9ff}.bear.moper{border-bottom-color:#b49cff}
+.board{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}.board .side{display:grid;gap:2px}.board .side.r{text-align:right}.board .side b{font:800 clamp(22px,5vw,34px) var(--display)}.board .side span{font:500 13px var(--mono);color:var(--dim)}.board .vs{font:700 14px var(--mono);color:var(--dim)}.board .bar{grid-column:1/-1;display:flex;height:12px;border-radius:99px;overflow:hidden;background:#111826}.board .bar i{display:block;transition:width .6s}
 .bear.open:hover{border-color:var(--gold)}
-.bear.sel{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,179,71,.25)}
+.bear.sel{border-color:var(--gold);box-shadow:0 0 0 2px rgba(143,211,255,.25)}
 .bear.held{cursor:default}
 .bear.held img,.bear.held canvas{filter:grayscale(.85) brightness(.55)}
 .facts{font:500 13px var(--mono);color:var(--dim)}
-.founder{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:18px;align-items:center;background:var(--surface);border:2px solid var(--gold);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 0 0 3px rgba(255,179,71,.12)}
+.founder{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:18px;align-items:center;background:var(--surface);border:2px solid var(--gold);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 0 0 3px rgba(143,211,255,.12)}
 @media(max-width:560px){.founder{grid-template-columns:minmax(0,1fr);justify-items:start}.founder img{max-width:200px}}
 .founder img{width:100%;height:auto;aspect-ratio:1;image-rendering:pixelated;border-radius:8px;display:block}
 .founder .tag{font:600 13px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
@@ -73,7 +73,7 @@ a.bear.launched:hover,a.bear.launched:focus-visible{border-color:var(--gold)}
 .recent img{width:36px;height:36px;border-radius:50%;image-rendering:pixelated;flex:none}
 .recent b{font-weight:800;font-size:14px;display:block;line-height:1.2;overflow-wrap:anywhere}
 .recent small{font:500 13px var(--mono);color:var(--dim)}
-.feerow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#1a1412}
+.feerow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#111826}
 .feerow span{font-size:14px;overflow-wrap:anywhere}
 .msg{font-size:14px;min-height:1.4em}.msg.err{color:var(--bad)}.msg.ok{color:var(--good)}
 .log{font:500 13px var(--mono);display:grid;gap:4px;overflow-wrap:anywhere}
@@ -93,11 +93,11 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
 #splash.out{opacity:0;pointer-events:none}
 #splash canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
 #splash{align-items:flex-start}
-#splash .cap{position:relative;text-align:center;margin-top:max(5vh,20px);padding:18px 28px 20px;max-width:min(92vw,640px);color:#fff;background:linear-gradient(rgba(28,20,14,.86),rgba(28,20,14,.76));border:1px solid rgba(255,179,71,.35);border-radius:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 8px 40px rgba(0,0,0,.6);animation:rise 2.4s ease both}
+#splash .cap{position:relative;text-align:center;margin-top:max(5vh,20px);padding:18px 28px 20px;max-width:min(92vw,640px);color:#fff;background:linear-gradient(rgba(8,14,26,.88),rgba(8,14,26,.78));border:1px solid rgba(143,211,255,.35);border-radius:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 8px 40px rgba(0,0,0,.6);animation:rise 2.4s ease both}
 #splash .cap h2{text-shadow:0 2px 6px #000;font-family:var(--display);font-weight:700;font-size:clamp(34px,9vw,72px);margin:0 0 6px;letter-spacing:.02em}
 #splash .cap p{margin:0 0 14px;color:#fff;font-size:18px;font-weight:500;text-shadow:0 1px 3px #000}
-#splash .cap button{font:700 16px var(--sans);border-radius:99px;padding:11px 26px;border:1px solid #ffb347;background:#3a1f0c;color:#fff;cursor:pointer}
-#splash .slog{position:absolute;left:max(16px,4vw);bottom:max(16px,5vh);font:500 15px/1.5 var(--mono);color:#fff;text-shadow:0 1px 3px #000,0 0 8px #000;background:rgba(28,20,14,.8);border:1px solid rgba(255,179,71,.3);border-radius:10px;padding:10px 14px;white-space:pre;pointer-events:none;text-align:left;max-width:calc(100vw - 32px);overflow:hidden}
+#splash .cap button{font:700 16px var(--sans);border-radius:99px;padding:11px 26px;border:1px solid #8fd3ff;background:#10283e;color:#fff;cursor:pointer}
+#splash .slog{position:absolute;left:max(16px,4vw);bottom:max(16px,5vh);font:500 15px/1.5 var(--mono);color:#fff;text-shadow:0 1px 3px #000,0 0 8px #000;background:rgba(8,14,26,.82);border:1px solid rgba(143,211,255,.3);border-radius:10px;padding:10px 14px;white-space:pre;pointer-events:none;text-align:left;max-width:calc(100vw - 32px);overflow:hidden}
 #splash .slog:empty{display:none}
 @keyframes rise{0%{opacity:0;transform:translateY(10px)}35%{opacity:0}100%{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){#splash{display:none}#splash .cap{animation:none}}
@@ -112,7 +112,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
   <div class="slog" id="slog" aria-hidden="true"></div>
   <div class="cap">
     <h2>SadPad</h2>
-    <p>The cats and the dogs are on the chain. Pick a friend.</p>
+    <p>Everyone here is a little sad. Pick a friend.</p>
     <button id="enter" type="button">Proceed ›</button>
   </div>
 </div>
@@ -123,19 +123,19 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
   <button class="wallet" id="wbtn" type="button"><span id="wlabel">Connect Phantom</span></button>
 </header>
 
-<h1>Cats & Dogs. <span>Claim a pet.</span></h1>
-<p class="lede">Every coin launched here claims one of SadPad's voxel cats or dogs as its logo, and that pet is locked to the coin for good. Its pet reports the coin’s public numbers on the coin page: curve progress, holders, dev share and anything worth flagging. Connect your wallet, pick a pet or let SadPad choose, name your coin, and launch on pump.fun.</p>
+<h1>Sad? Same. <span>Launch a coin.</span></h1>
+<p class="lede">Every coin launched here claims one of SadPad's little voxel friends as its logo: a rain cloud, a ghost, a clown, an onion, a robot, a cactus, a slice of toast or a blob. All of them are sad, and the one you pick is locked to your coin for good. It reports the coin’s public numbers on the coin page: curve progress, holders, dev share and anything worth flagging. Connect your wallet, pick a friend or let SadPad choose, name your coin, and launch on pump.fun.</p>
 
 <div id="recent" hidden><h2>Recent launches</h2><div class="recent" id="recentlist"></div></div>
 
 <h2>PRIME</h2>
 <div class="founder" id="founder" hidden></div>
 
-<h2>Cats & Dogs</h2>
+<h2>Weepers & Mopers</h2>
 <div class="board" id="board"></div>
-<h2>The pets</h2>
+<h2>The sad ones</h2>
 <div class="bears" id="bears"></div>
-<div class="row" style="margin-top:12px"><button class="btn" id="rand" type="button">Random pet</button><span class="facts" id="count"></span></div>
+<div class="row" style="margin-top:12px"><button class="btn" id="rand" type="button">Random friend</button><span class="facts" id="count"></span></div>
 
 <h2>Launch</h2>
 <div class="panel">
@@ -150,7 +150,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
   </div>
   <div class="two">
     <div><label for="buy">Your first buy in SOL <span class="rv" id="buyhint">0 to 5</span></label><input type="text" id="buy" value="0.1" inputmode="decimal"></div>
-    <div><label>Logo</label><div class="note" id="pick">Random pet, chosen when you launch.</div><div id="customlogo" hidden style="margin-top:10px"><label for="logofile">Custom logo <span class="rv">founder only, optional</span></label><input type="file" id="logofile" accept="image/png,image/jpeg,image/webp"><div class="note">Leave empty to use the pet’s picture. It is squared to 512 px.</div></div></div>
+    <div><label>Logo</label><div class="note" id="pick">Random friend, chosen when you launch.</div><div id="customlogo" hidden style="margin-top:10px"><label for="logofile">Custom logo <span class="rv">founder only, optional</span></label><input type="file" id="logofile" accept="image/png,image/jpeg,image/webp"><div class="note">Leave empty to use the pet’s picture. It is squared to 512 px.</div></div></div>
   </div>
   <div class="note" id="feenote"></div>
   <div class="row"><button class="btn go" id="go" type="button">Launch</button><button class="btn" id="air" type="button" hidden>Get 1 devnet SOL</button><span class="msg" id="msg"></span></div>
@@ -166,8 +166,8 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
   <div id="feelist" style="display:grid;gap:8px"></div>
 </div>
 
-<p class="fine">Launching creates a real coin on Solana's <span id="fnet">devnet</span>. You sign every transaction in your own wallet and pay its fees; SadPad never holds your SOL. Your first buy goes in the same transaction as the launch, so nobody can buy before you. A coin can lose all of its value, and its pet has no promised value. SadPad does not vouch for any coin launched here. Nothing here is financial advice.</p>
-<footer>Voxel pets drawn by code. <button type="button" id="replay">Replay the intro</button></footer>
+<p class="fine">Launching creates a real coin on Solana's <span id="fnet">devnet</span>. You sign every transaction in your own wallet and pay its fees; SadPad never holds your SOL. Your first buy goes in the same transaction as the launch, so nobody can buy before you. A coin can lose all of its value, and its character has no promised value. SadPad does not vouch for any coin launched here. Nothing here is financial advice.</p>
+<footer>Sad voxel friends drawn by code. <button type="button" id="replay">Replay the intro</button></footer>
 </div>
 
 <script src="/launch.js"></script>
@@ -208,13 +208,13 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
     });
   }
   var introTok=0,logT=0;
-  var LOGS=['> boot sadpad','> park gates open ... ok','> dog.01 spots cat.02','> cat.02 zoomies activated','> sniffer.01 scan launch block ... ok','> dog.03 chases cat.04','> cat.04 climbs the fence','> all pets in the park'];
+  var LOGS=['> boot sadpad','> sigh ... ok','> weeper.01 is crying again','> moper.02 refuses to explain','> sniffler.01 scan launch block ... ok','> raining on the ledger ... ok','> all friends are sad'];
   function freshCanvas(){var c=document.createElement('canvas');c.id='sc';c.setAttribute('aria-hidden','true');var o=$('sc');o.parentNode.replaceChild(c,o);return c}
   function begun(withLog){
     clearTimeout(startIntro.t);
     var el=$('slog');el.textContent='';clearInterval(logT);
     if(!withLog)return;var i=0,lines=[];
-    logT=setInterval(function(){var hx=function(){return Math.floor(Math.random()*65536).toString(16).padStart(4,'0')};var l=i<LOGS.length?LOGS[i]:(['> dog.0'+(1+Math.floor(Math.random()*4))+' chases cat.0'+(1+Math.floor(Math.random()*4)),'> cat.0'+(1+Math.floor(Math.random()*4))+' zoomies','> tag! block 0x'+hx()+' ... ok','> ball bounced 0x'+hx()][i%4]);i++;lines.push(l);if(lines.length>40)lines.shift();el.textContent=lines.slice(-5).join('\n')},700);
+    logT=setInterval(function(){var hx=function(){return Math.floor(Math.random()*65536).toString(16).padStart(4,'0')};var l=i<LOGS.length?LOGS[i]:(['> weeper.0'+(1+Math.floor(Math.random()*4))+' cries 0x'+hx(),'> moper.0'+(1+Math.floor(Math.random()*4))+' sighs','> it is raining 0x'+hx()+' ... ok','> moper.0'+(1+Math.floor(Math.random()*4))+' says meh'][i%4]);i++;lines.push(l);if(lines.length>40)lines.shift();el.textContent=lines.slice(-5).join('\n')},700);
   }
   function startMatrix(){splashCave=new Matrix(freshCanvas(),{fps:24});splashCave.start();begun(false)}
     $('enter').addEventListener('click',function(e){e.stopPropagation();endIntro()});
@@ -246,7 +246,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
         el.href='/coin/'+b.mint;el.title='Open the page for '+(b.name||b.symbol);
       }
       el.className='bear '+b.state+(b.agent&&b.agent.team?' '+b.agent.team.toLowerCase():'')+(pickSlot===b.n?' sel':'');
-      var im=document.createElement('img');im.src='/api/preview/'+b.n+'.png';im.alt=(b.agent?b.agent.name+', '+b.agent.role.toLowerCase()+' '+(b.agent.team==='DOG'?'dog':'cat'):'Pet '+b.n)+(b.state==='launched'&&b.name?', claimed by '+b.name:'');im.loading='lazy';el.appendChild(im);if(window.VoxelView&&b.state!=='held')VoxelView.card(im,'/api/agent/'+b.n+'/voxels.json');
+      var im=document.createElement('img');im.src='/api/preview/'+b.n+'.png';im.alt=(b.agent?b.agent.name+', '+b.agent.role.toLowerCase()+' '+(b.agent.team==='WEEPER'?'weeper':'moper'):'Pet '+b.n)+(b.state==='launched'&&b.name?', claimed by '+b.name:'');im.loading='lazy';el.appendChild(im);if(window.VoxelView&&b.state!=='held')VoxelView.card(im,'/api/agent/'+b.n+'/voxels.json');
       var t=document.createElement('b');t.textContent=b.state==='launched'&&b.name?b.name:(b.agent?b.agent.name:'#'+String(b.n).padStart(2,'0'));el.appendChild(t);
       var sm=document.createElement('small');
       if(b.state==='launched')sm.textContent='$'+b.symbol+' · '+(b.agent?b.agent.name:'#'+String(b.n).padStart(2,'0'));
@@ -254,13 +254,13 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
       if(b.agent&&b.agent.ability)el.title=b.agent.name+' · '+b.agent.ability.name+': '+b.agent.ability.does+(b.agent.weapon?'':'');
       el.appendChild(sm);g.appendChild(el);
     });
-    $('count').textContent=open+' of '+st.total+' pets open';
+    $('count').textContent=open+' of '+st.total+' friends open';
     $('rand').disabled=!open;
     if(pickSlot&&pickSlot!=='founder'&&!st.bears.some(function(b){return b.n===pickSlot&&b.state==='open'}))pickSlot=null;
   }
   var feeNoteBase='';
   function showPick(){
-    $('pick').textContent=pickSlot==='founder'?'PRIME, the flagship agent. One of one.':pickSlot?(bearName(pickSlot)+' is yours if you launch now.'):'Random pet, chosen when you launch.';
+    $('pick').textContent=pickSlot==='founder'?'PRIME, the flagship agent. One of one.':pickSlot?(bearName(pickSlot)+' is yours if you launch now.'):'Random friend, chosen when you launch.';
     $('customlogo').hidden=!(st&&st.founder&&(pickSlot==='founder'||(pubkey&&short(pubkey)===st.founder.short)));
     $('feenote').textContent=pickSlot==='founder'?'Founder launch: all creator fees go to your wallet.':feeNoteBase;
   }
@@ -268,7 +268,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
     var f=st&&st.founder,box=$('founder');
     box.hidden=!f;[].slice.call(document.querySelectorAll('h2')).forEach(function(h){if(h.textContent==='PRIME')h.hidden=!f});
     if(!f)return;box.textContent='';
-    var im=document.createElement('img');im.src='/api/founder.png';im.alt='PRIME, the flagship: a big golden Labrador in a black top hat';box.appendChild(im);if(window.VoxelView)VoxelView.card(im,'/api/founder/voxels.json',{radius:'8px',max:14});
+    var im=document.createElement('img');im.src='/api/founder.png';im.alt='PRIME, the flagship: a big storm cloud in a gold crown, crying gold';box.appendChild(im);if(window.VoxelView)VoxelView.card(im,'/api/founder/voxels.json',{radius:'8px',max:14});
     var d=document.createElement('div'),tg=document.createElement('div'),h=document.createElement('h3'),p=document.createElement('p');
     tg.className='tag';tg.textContent='Flagship · one of one';d.appendChild(tg);
     if(f.state==='launched'){
@@ -276,7 +276,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
       if(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(f.mint||'')){var a=document.createElement('a');a.className='btn go';a.href='/coin/'+f.mint;a.textContent='Open the coin page';d.appendChild(a)}
     }else{
       h.textContent='PRIME';
-      p.textContent=f.state==='held'?'The flagship coin is being launched right now.':'A big golden Labrador in a black top hat. Not in the numbered set, and reserved for SadPad’s founder wallet ('+f.short+').';
+      p.textContent=f.state==='held'?'The flagship coin is being launched right now.':'A big storm cloud in a gold crown, crying gold. Not in the numbered set, and reserved for SadPad’s founder wallet ('+f.short+').';
       d.appendChild(h);d.appendChild(p);
       if(f.agent&&f.agent.ability){var pa=document.createElement('p');pa.style.cssText='margin:6px 0 0;font-size:14px;color:var(--dim)';var pb=document.createElement('b');pb.style.color='var(--gold)';pb.textContent='Special ability: '+f.agent.ability.name+'. ';pa.appendChild(pb);pa.appendChild(document.createTextNode(f.agent.ability.does));d.appendChild(pa)}
       if(f.state==='reserved'&&pubkey&&short(pubkey)===f.short){var b=document.createElement('button');b.type='button';b.className='btn go';b.textContent=pickSlot==='founder'?'PRIME selected':'Launch the PRIME coin';
@@ -307,14 +307,14 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
       if(j.platform){var pct=j.platform.bps/100;var nb=document.createElement('b');nb.textContent=(100-pct)+'% to you';$('feenote').appendChild(document.createTextNode('Creator fees from trading: '));$('feenote').appendChild(nb);$('feenote').appendChild(document.createTextNode(' and '+pct+'% to SadPad. You approve the split in your wallet right after the launch.'))}
       else $('feenote').textContent='Creator fees from trading all go to your wallet.';
       feeNoteBase=$('feenote').textContent;showPick();
-      if(!$('logoicon').firstChild)$('logoicon').appendChild(bearIcon(j.silhouette||[],'#ffb347'));
+      if(!$('logoicon').firstChild)$('logoicon').appendChild(bearIcon(j.silhouette||[],'#8fd3ff'));
       drawBears();drawFounder();drawRecent(j.recent);drawBoard(j.teams);
-    }).catch(function(){$('count').textContent='Could not load the pets. Refresh in a minute.'});
+    }).catch(function(){$('count').textContent='Could not load the friends. Refresh in a minute.'});
   }
   function drawBoard(t){var b=$('board');if(!b||!t)return;b.textContent='';
     function side(k,name,cls){var d=document.createElement('div');d.className='side'+(cls?' '+cls:'');var n=document.createElement('b');n.textContent=name+' '+t[k].launched;var s=document.createElement('span');s.textContent=t[k].launched+' of '+t[k].total+' claimed · '+t[k].open+' open';d.appendChild(n);d.appendChild(s);return d}
-    b.appendChild(side('DOG','Dogs'));var vs=document.createElement('div');vs.className='vs';vs.textContent='&';b.appendChild(vs);b.appendChild(side('CAT','Cats','r'));
-    var tot=t.DOG.launched+t.CAT.launched,bar=document.createElement('div');bar.className='bar';var a=document.createElement('i'),c=document.createElement('i');a.style.background='#e8913a';c.style.background='#9a7cff';var pa=tot?t.DOG.launched/tot*100:50;a.style.width=pa+'%';c.style.width=(100-pa)+'%';bar.appendChild(a);bar.appendChild(c);b.appendChild(bar)}
+    b.appendChild(side('WEEPER','Weepers'));var vs=document.createElement('div');vs.className='vs';vs.textContent='&';b.appendChild(vs);b.appendChild(side('MOPER','Mopers','r'));
+    var tot=t.WEEPER.launched+t.MOPER.launched,bar=document.createElement('div');bar.className='bar';var a=document.createElement('i'),c=document.createElement('i');a.style.background='#5aa9ff';c.style.background='#b49cff';var pa=tot?t.WEEPER.launched/tot*100:50;a.style.width=pa+'%';c.style.width=(100-pa)+'%';bar.appendChild(a);bar.appendChild(c);b.appendChild(bar)}
   refresh();setInterval(function(){if(!running)refresh()},20000);
 
   function connect(){
@@ -450,10 +450,10 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
       if(!lockFailed)s3('ok',bearName(pickSlot)+' is now locked to $'+sym);else s3('warn',(ln&&ln.json.error)||'Could not confirm. Your coin exists on-chain.');
       var box=$('result');box.textContent='';
       var h=document.createElement('div');h.textContent='Your coin is live. Mint address:';box.appendChild(h);
-      var m=document.createElement('div');m.style.cssText='margin:8px 0;color:#ffb347;font-family:var(--mono)';m.textContent=out.mint;box.appendChild(m);
+      var m=document.createElement('div');m.style.cssText='margin:8px 0;color:#8fd3ff;font-family:var(--mono)';m.textContent=out.mint;box.appendChild(m);
       var cp=document.createElement('button');cp.className='cp';cp.type='button';cp.textContent='Copy';cp.onclick=function(){try{navigator.clipboard.writeText(out.mint).then(function(){cp.textContent='Copied'},function(){cp.textContent='Select and copy'})}catch(e){cp.textContent='Select and copy'}};box.appendChild(cp);
       var M=out.mint,link=st.cluster==='mainnet'?'https://pump.fun/coin/'+M:'https://explorer.solana.com/address/'+M+'?cluster=devnet';
-      var a=document.createElement('a');a.href=link;a.target='_blank';a.rel='noopener';a.textContent=st.cluster==='mainnet'?'Open on pump.fun':'Open on Solana Explorer (devnet)';a.style.cssText='margin-left:12px;color:#ffb347';box.appendChild(a);
+      var a=document.createElement('a');a.href=link;a.target='_blank';a.rel='noopener';a.textContent=st.cluster==='mainnet'?'Open on pump.fun':'Open on Solana Explorer (devnet)';a.style.cssText='margin-left:12px;color:#8fd3ff';box.appendChild(a);
       var n=document.createElement('div');n.style.marginTop='10px';
       var parts=[];
       if(sh)parts.push(out.splitError?'The fee split did NOT go through ('+out.splitError+'), so creator fees currently go only to you. SadPad expects its 5%, so please set the split from pump.fun.':'Creator fee split confirmed: '+(100-st.platform.bps)+'% you, '+(st.platform.bps/100)+'% the Den.');
@@ -469,7 +469,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
         var gu='https://gmgn.ai/sol/token/'+M,opened=false;
         try{if(gm&&!gm.closed){try{gm.opener=null}catch(e7){}gm.location.href=gu;opened=true}}catch(e5){}
         var gw=document.createElement('div');gw.style.cssText='margin-top:14px';
-        var ga=document.createElement('a');ga.href=gu;ga.target='_blank';ga.rel='noopener';ga.className='btn';ga.textContent=opened?'GMGN opened in a new tab. Open it again':'Open on GMGN';ga.style.cssText='display:inline-block;text-decoration:none;border-color:#ffb347;color:#fff';gw.appendChild(ga);
+        var ga=document.createElement('a');ga.href=gu;ga.target='_blank';ga.rel='noopener';ga.className='btn';ga.textContent=opened?'GMGN opened in a new tab. Open it again':'Open on GMGN';ga.style.cssText='display:inline-block;text-decoration:none;border-color:#8fd3ff;color:#fff';gw.appendChild(ga);
         if(!opened){var gn=document.createElement('div');gn.style.cssText='margin-top:6px;font-size:13px;opacity:.8';gn.textContent='Your browser did not open GMGN by itself (pop-ups are often blocked). Press the button, and allow pop-ups for this site to have it open on its own next time.';gw.appendChild(gn)}
         box.appendChild(gw);gm=null;
       }

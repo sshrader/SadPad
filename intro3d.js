@@ -45,7 +45,7 @@
     var vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,CUBE.v,gl.STATIC_DRAW);
     var ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,CUBE.i,gl.STATIC_DRAW);
     var uArmA=U('uArmA'),uArmM=U('uArmM'),uLevel=U('uLevel'),uHand=U('uHand'),uLean=U('uLean'),uPz=U('uPz'),uTail=U('uTail'),uOrg=U('uOrg'),uPivot=U('uPivot'),uSwing=U('uSwing'),uVP=U('uVP'),uModel=U('uModel'),uRot=U('uRot'),uCol=U('uCol'),uOver=U('uOver'),uEmit=U('uEmit'),uBoost=U('uBoost');
-    gl.uniform3f(U('uTint'),1,1,1);gl.uniform3f(U('uFog'),.55,.75,.9);gl.uniform2f(U('uFogR'),70,190);
+    gl.uniform3f(U('uTint'),1,1,1);gl.uniform3f(U('uFog'),.28,.34,.44);gl.uniform2f(U('uFogR'),70,190);
     // an object is a set of instances (cells) in its own vertex array
     function obj(data,max,dynamic){
       var vao=gl.createVertexArray();gl.bindVertexArray(vao);
@@ -82,16 +82,16 @@
         if(a.it){sx=dx/d*1.2;sz=dz/d*1.2}
         else{var k=Math.max(0,Math.min(1,(9-d)/9))*1.3;sx=-dx/d*k;sz=-dz/d*k;var cr=Math.hypot(a.x-hx,(a.z-hz)*1.5)||1;sx+=(a.z-hz)/cr*.9;sz-=(a.x-hx)/cr*.9}
         var hd=Math.hypot(a.x-hx,a.z-hz);if(hd>7){sx-=(a.x-hx)/hd*(hd-7)*.35;sz-=(a.z-hz)/hd*(hd-7)*.35}
-        OBS.forEach(function(o){var ox=a.x-o[0],oz=a.z-o[1],od=Math.hypot(ox,oz)||1,r=o[2]+2.4;if(od<r){var k=(r-od)/r*3.2;sx+=ox/od*k;sz+=oz/od*k}});
+        OBS.forEach(function(o){var ox=a.x-o[0],oz=a.z-o[1],od=Math.hypot(ox,oz)||1,r=o[2]+2.4;if(od<r){var k=(r-od)/r*6.5;sx+=ox/od*k;sz+=oz/od*k}});
         if(a.x>AX-4)sx-=(a.x-AX+4)*.8;if(a.x<-AX+4)sx+=(-AX+4-a.x)*.8;if(a.z>AZ-3)sz-=(a.z-AZ+3)*1.1;if(a.z<-AZ+3)sz+=(-AZ+3-a.z)*1.1;
         var cr=Math.hypot(a.x/1.6,a.z)||1;sx+=a.z/cr*.7;sz-=a.x/1.6/cr*.7; // everyone circles the park, so the chase spreads out
         sx+=Math.sin(time*.9+a.wob)*.25;sz+=Math.cos(time*.7+a.wob*1.3)*.25;
         if(a.pause>0){a.pause-=dt;a.v=Math.max(0,a.v-dt*16)}
         else{
           var want=Math.atan2(sx,sz),da=norm(want-a.yaw);a.yaw+=Math.max(-4.2*dt,Math.min(4.2*dt,da));
-          var sp=a.rate*5.4*(1+.16*Math.sin(time*.9+a.wob))*(1+a.boost*.5)*Math.max(.35,1-Math.abs(da)/2.2);a.v+=(sp-a.v)*Math.min(1,dt*5);
+          var sp=a.rate*4.2*(1+.16*Math.sin(time*.9+a.wob))*(1+a.boost*.5)*Math.max(.35,1-Math.abs(da)/2.2);a.v+=(sp-a.v)*Math.min(1,dt*5);
           // caught up: a tag. The chaser stops for a play bow, then the two swap roles
-          if(a.it&&d<2.6&&pr.pause<=0){a.pause=1+rr()*.8;pr.pause=.5;pr.boost=1;a.it=false;pr.it=true;puffs.push({x:(a.x+pr.x)/2,z:(a.z+pr.z)/2,t:time,c:a.cat?[.78,.63,1]:[1,.7,.3]})}}
+          if(a.it&&d<2.6&&pr.pause<=0){a.pause=1+rr()*.8;pr.pause=.5;pr.boost=1;a.it=false;pr.it=true;puffs.push({x:(a.x+pr.x)/2,z:(a.z+pr.z)/2,t:time,c:a.cat?[.7,.6,1]:[.56,.83,1]})}}
         a.boost=Math.max(0,a.boost-dt*.9);
         st.forEach(function(o){if(o===a)return;var ox=a.x-o.x,oz=a.z-o.z,od=Math.hypot(ox,oz);if(od<3.6&&od>.01){var k=(3.6-od)*dt*3;a.x+=ox/od*k;a.z+=oz/od*k}});
         a.x+=Math.sin(a.yaw)*a.v*dt;a.z+=Math.cos(a.yaw)*a.v*dt;
@@ -103,57 +103,55 @@
       puffs=puffs.filter(function(q){return time-q.t<.9});
       flies.forEach(function(f){f.a+=dt*(1.5+Math.sin(time+f.s)*1.2);f.x+=Math.cos(f.a)*f.s*dt*3;f.z+=Math.sin(f.a*.8)*f.s*dt*2.2;if(f.x>AX+3)f.x=-AX-3;if(f.x<-AX-3)f.x=AX+3;if(f.z>AZ+2)f.z=-AZ-2;if(f.z<-AZ-2)f.z=AZ+2});
     }
-    function tree(x,z,s,t,k){var sw=Math.sin(t*.8+k)*.05*s;
-      bx(x,.02,z,5.2*s,.03,5.2*s,[.14,.38,.17]);
-      bx(x,1.2*s,z,.9*s,2.4*s,.9*s,[.42,.28,.16]);
-      bx(x+sw,3.3*s,z,4.6*s,1.7*s,4.6*s,[.17,.52,.24]);bx(x+sw*1.5,4.7*s,z,3.6*s,1.5*s,3.6*s,[.24,.64,.31]);bx(x+sw*2,5.8*s,z,2.3*s,1.2*s,2.3*s,[.34,.76,.4]);
-      if(k%2===0){bx(x+1.3*s,4.2*s,z+1.9*s,.4,.4,.4,[1,.4,.4]);bx(x-1.5*s,3.5*s,z+2.1*s,.4,.4,.4,[1,.4,.4])}}
+    function tree(x,z,s,t,k){var sw=Math.sin(t*.8+k)*.04*s;
+      bx(x,.02,z,5.2*s,.03,5.2*s,[.08,.2,.14]);
+      bx(x,1.2*s,z,.9*s,2.4*s,.9*s,[.28,.2,.15]);
+      bx(x+sw,3.3*s,z,4.6*s,1.7*s,4.6*s,[.1,.32,.22]);bx(x+sw*1.5,4.7*s,z,3.6*s,1.5*s,3.6*s,[.14,.4,.27]);bx(x+sw*2,5.8*s,z,2.3*s,1.2*s,2.3*s,[.18,.46,.32])}
     function frame(){
       var w=canvas.clientWidth||canvas.width,h=canvas.clientHeight||canvas.height,dpr=Math.min(window.devicePixelRatio||1,2),cw=Math.max(2,Math.round(w*dpr)),ch=Math.max(2,Math.round(h*dpr));
       if(canvas.width!==cw||canvas.height!==ch){canvas.width=cw;canvas.height=ch}
-      gl.viewport(0,0,cw,ch);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.clearColor(.2,.46,.24,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+      gl.viewport(0,0,cw,ch);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.clearColor(.1,.15,.2,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
       var t=time,asp=cw/ch,narrow=asp<.9;
       // high camera looking steeply down, drifting slowly
       var cx=Math.sin(t*.22)*3,eye=[cx,(narrow?60:36),(narrow?29:20)+Math.cos(t*.17)*1.2],tgt=[cx,0,-1.5];
       gl.uniformMatrix4fv(uVP,false,mul(persp(narrow?48:40,asp,.5,260),look(eye,tgt)));
-      var WOOD=[.55,.38,.22],RAIL=[.93,.88,.78];
-      // lawn with mown stripes, a gravel path, then the cloud shadows drifting over
-      bx(0,-.2,0,AX*2+34,.2,AZ*2+26,[.2,.5,.22]);
-      for(var gx=-20;gx<=20;gx+=4)bx(gx,-.02,0,2,.04,AZ*2+22,[.25,.6,.27]);
-      bx(0,.03,0.5,AX*2+10,.05,3.6,[.8,.7,.52]);bx(7,.035,0,3.6,.05,AZ*2+20,[.8,.7,.52]);
-      for(var c=0;c<2;c++){var cxs=((t*(.9+c*.5)+c*22)%(AX*2+30))-AX-15;bx(cxs,.06,-3+c*8,9,.02,4.5,[.17,.43,.2])}
-      // pond with a duck, lily pads and shimmer
-      bx(-11,.02,3.5,9.4,.04,8,[.5,.4,.26]);bx(-11,.05,3.5,8.2,.04,6.8,[.25,.56,.86]);bx(-11,.05,3.5,6.4,.04,5.2,[.3,.62,.9]);
-      for(var k=0;k<3;k++)bx(-11+Math.sin(t*.8+k*2)*2.6,.09,3.5+Math.cos(t*.6+k*3)*2,1,.03,.5,[.75,.92,1]);
-      bx(-13.4,.09,5,1.1,.04,1.1,[.2,.66,.3]);bx(-9,.09,1.6,1,.04,1,[.2,.66,.3]);bx(-9,.12,1.6,.3,.06,.3,[1,.6,.8]);
-      var dkx=-11+Math.sin(t*.35)*2.4,dkz=3.5+Math.cos(t*.35)*1.6,dd=Math.cos(t*.35)>0?-1:1;
-      bx(dkx,.4,dkz,1,.6,.8,[1,.9,.9]);bx(dkx+dd*.5,.8,dkz,.5,.5,.5,[.2,.5,.3]);bx(dkx+dd*.85,.78,dkz,.35,.15,.25,[1,.6,.15]);
-      // flowers swaying in the grass
-      FL.forEach(function(f){var sw=Math.sin(t*1.6+f.p)*.08;bx(f.x,.22,f.z,.08,.44,.08,[.2,.5,.2]);bx(f.x+sw,.5,f.z,.42,.26,.42,f.c)});
-      // picket fence, trees and bushes round the edge
+      var WOOD=[.34,.3,.28],RAIL=[.58,.6,.64];
+      // a soaked lawn, a wet gravel path, and clouds drifting over
+      bx(0,-.2,0,AX*2+34,.2,AZ*2+26,[.13,.28,.2]);
+      for(var gx=-20;gx<=20;gx+=4)bx(gx,-.02,0,2,.04,AZ*2+22,[.16,.33,.24]);
+      bx(0,.03,0.5,AX*2+10,.05,3.6,[.42,.43,.45]);bx(7,.035,0,3.6,.05,AZ*2+20,[.42,.43,.45]);
+      for(var c=0;c<3;c++){var cxs=((t*(.7+c*.4)+c*18)%(AX*2+30))-AX-15;bx(cxs,.06,-4+c*6,10,.02,5,[.09,.2,.15])}
+      // puddles on the path
+      [[-2,.5,3,1.6],[12,0.5,2.4,1.4],[7,-5,2,2.6],[7,6,2.2,2.2]].forEach(function(q,i){bx(q[0],.06,q[1],q[2],.02,q[3],[.24,.34,.5]);var u=(t*.8+i*.37)%1;bx(q[0]+Math.sin(i*3)*.4,.08,q[1],q[2]*u*.9,.02,q[3]*u*.9,[.5,.62,.8])});
+      // the pond, with rain rings
+      bx(-11,.02,3.5,9.4,.04,8,[.2,.22,.2]);bx(-11,.05,3.5,8.2,.04,6.8,[.17,.28,.45]);bx(-11,.05,3.5,6.4,.04,5.2,[.2,.32,.5]);
+      for(var k=0;k<5;k++){var u2=(t*.9+k*.21)%1,px=-11+Math.sin(k*2.3)*2.8,pz=3.5+Math.cos(k*1.7)*2.2;bx(px,.09,pz,.4+u2*2.2,.03,.4+u2*1.5,[.5*(1-u2)+.2,.62*(1-u2)+.3,.8*(1-u2)+.5])}
+      bx(-13.4,.09,5,1.1,.04,1.1,[.14,.4,.26]);bx(-9,.09,1.6,1,.04,1,[.14,.4,.26]);
+      // limp flowers
+      FL.forEach(function(f){var sw=Math.sin(t*1.2+f.p)*.05;bx(f.x,.18,f.z,.08,.36,.08,[.14,.34,.2]);bx(f.x+.25+sw,.34,f.z,.38,.2,.38,[f.c[0]*.55,f.c[1]*.55,f.c[2]*.6])});
+      // weathered fence, trees and bushes round the edge
       for(var x=-AX-1;x<=AX+1;x+=2.6){bx(x,.55,-AZ-1.4,.3,1.1,.3,WOOD);bx(x,.55,AZ+1.4,.3,.9,.3,WOOD)}
       for(var z=-AZ-1;z<=AZ+1;z+=2.6){bx(-AX-1.4,.55,z,.3,1.1,.3,WOOD);bx(AX+1.4,.55,z,.3,1.1,.3,WOOD)}
       bx(0,.8,-AZ-1.4,AX*2+3,.14,.12,RAIL);bx(0,.4,-AZ-1.4,AX*2+3,.14,.12,RAIL);bx(-AX-1.4,.8,0,.12,.14,AZ*2+3,RAIL);bx(AX+1.4,.8,0,.12,.14,AZ*2+3,RAIL);bx(0,.6,AZ+1.4,AX*2+3,.14,.12,RAIL);
       [[-15,-AZ-4.5,1.5],[-8,-AZ-5,1.25],[1,-AZ-4.6,1.6],[9,-AZ-5,1.3],[16,-AZ-4.4,1.5],[-AX-4.5,-2,1.3],[-AX-5,6,1.5],[AX+4.5,-1,1.5],[AX+5,7,1.25]].forEach(function(q,i){tree(q[0],q[1],q[2],t,i)});
       tree(OBS[1][0],OBS[1][1],1.15,t,0);tree(OBS[2][0],OBS[2][1],.95,t,2);
-      [[-6,AZ+3.4],[12,AZ+3.2],[-16,AZ+3.5]].forEach(function(q,i){bx(q[0],.8,q[1],2.6,1.6,2.2,[.2,.56,.28]);bx(q[0]+.5,1.7,q[1],1.6,.9,1.4,[.3,.7,.36]);bx(q[0]-.7,1.1,q[1]+1.12,.4,.4,.3,[1,.5,.6])});
-      // a bench, a tennis ball bouncing about and a bone on the grass
-      bx(3,.7,AZ-.4,4.2,.25,1.1,WOOD);bx(3,1.35,AZ-.95,4.2,1,.2,WOOD);bx(1.2,.35,AZ-.4,.3,.7,1,[.3,.3,.35]);bx(4.8,.35,AZ-.4,.3,.7,1,[.3,.3,.35]);
-      var bxp=Math.sin(t*.5)*11,bzp=Math.cos(t*.37)*4.5+1,byp=Math.abs(Math.sin(t*4))*1.3+.35;bx(bxp,.04,bzp,.9,.03,.9,[.12,.34,.15]);bx(bxp,byp,bzp,.6,.6,.6,[.85,1,.3]);
-      bx(-5,.15,7,1.4,.25,.4,[.98,.95,.88]);bx(-5.8,.15,6.8,.4,.25,.4,[.98,.95,.88]);bx(-5.8,.15,7.3,.4,.25,.4,[.98,.95,.88]);bx(-4.2,.15,6.8,.4,.25,.4,[.98,.95,.88]);bx(-4.2,.15,7.3,.4,.25,.4,[.98,.95,.88]);
-      // butterflies
-      flies.forEach(function(f){var fl=Math.abs(Math.sin(t*14+f.a*3)),c=f.c?(f.c===1?[1,.8,.3]:[.7,.8,1]):[1,.6,.8],y=2.2+Math.sin(t*2+f.a)*.5;bx(f.x,y,f.z,.1,.1,.4,[.2,.15,.1]);bx(f.x-.28*fl,y+.05,f.z,.46*fl+.05,.05,.4,c);bx(f.x+.28*fl,y+.05,f.z,.46*fl+.05,.05,.4,c)});
-      // tag bursts: little stars and hearts when one pet catches another
-      puffs.forEach(function(q){var u=(t-q.t)/.9,r=u*2.8,y=1.4+Math.sin(Math.PI*u)*2;for(var k=0;k<7;k++){var an=k/7*Math.PI*2+u*2;draw(box,trs(q.x+Math.cos(an)*r,y+(k%2)*.5,q.z+Math.sin(an)*r,t*5+k,0,.45*(1-u*.6),.45*(1-u*.6),.45*(1-u*.6)),{col:k%2?[1,.85,.3]:q.c,emit:true,boost:.7})}});
-      // the pets: each wears a little marker, orange for the dogs and violet for the cats
+      [[-6,AZ+3.4],[12,AZ+3.2],[-16,AZ+3.5]].forEach(function(q){bx(q[0],.8,q[1],2.6,1.6,2.2,[.1,.32,.2]);bx(q[0]+.5,1.7,q[1],1.6,.9,1.4,[.16,.4,.26])});
+      // an empty bench and a forgotten umbrella
+      bx(3,.7,AZ-.4,4.2,.25,1.1,WOOD);bx(3,1.35,AZ-.95,4.2,1,.2,WOOD);bx(1.2,.35,AZ-.4,.3,.7,1,[.2,.22,.28]);bx(4.8,.35,AZ-.4,.3,.7,1,[.2,.22,.28]);
+      bx(-5,.18,7,3.4,.3,2.6,[.22,.28,.55]);bx(-5,.4,7,2.2,.25,1.6,[.28,.36,.66]);bx(-2.9,.12,7.4,2.2,.1,.1,[.2,.2,.24]);
+      // tear drops, little rings when one pet reaches another
+      puffs.forEach(function(q){var u=(t-q.t)/.9,r=u*2.8,y=1.4+Math.sin(Math.PI*u)*2;for(var k=0;k<7;k++){var an=k/7*Math.PI*2+u*2;draw(box,trs(q.x+Math.cos(an)*r,y+(k%2)*.5,q.z+Math.sin(an)*r,t*5+k,0,.4*(1-u*.6),.55*(1-u*.6),.4*(1-u*.6)),{col:k%2?[.7,.88,1]:q.c,emit:true,boost:.7})}});
+      // the pets: each wears a little marker, blue for the weepers and violet for the mopers
       st.forEach(function(a,i){
         var bob=Math.abs(Math.sin(a.gait))*(.1+.25*a.run)*Math.min(1,a.v*.4),roll=Math.sin(t*7+a.ph)*.02*Math.min(1,a.v*.4);
-        var sp=a.o.data&&a.o.data.pet?S*1.45:S;
-        bx(a.x,.05,a.z,3.2,.03,2.2,[.12,.34,.15]);
+        var sp=a.o.data&&a.o.data.pet?S*.9/(a.o.data.zoom||1):S;
+        bx(a.x,.05,a.z,3.2,.03,2.2,[.06,.14,.1]);
         draw(a.o,trs(a.x,.5*sp+bob+.02,a.z,a.yaw,roll,sp,sp,sp),{pose:a.pose,ph:a.gait});
-        var mc=a.cat?[.62,.45,1]:[1,.62,.22],sy=Math.sin(t*3+i);
-        draw(box,trs(a.x,6.1+bob+sy*.15,a.z,t*2+i,0,.7,.7,.7),{col:mc,emit:true,boost:.5+.3*sy});
+        var mc=a.cat?[.62,.45,1]:[.4,.7,1],sy=Math.sin(t*3+i);
+        draw(box,trs(a.x,7.1+bob+sy*.15,a.z,t*2+i,0,.7,.7,.7),{col:mc,emit:true,boost:.5+.3*sy});
       });
+      // rain, over everything
+      for(var rI=0;rI<150;rI++){var rx=((rI*37.7)%(AX*2+16))-AX-8,rz=((rI*53.3)%(AZ*2+14))-AZ-7,ry=16-((t*13+rI*2.3)%16);bx(rx+(16-ry)*.12,ry,rz,.05,.9,.05,[.65,.8,1])}
     }
     function start(){var t0=performance.now();last=t0;
       // time the very first frame, forced to finish: a device this slow gets the 2D intro instead

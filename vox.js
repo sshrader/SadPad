@@ -27,7 +27,8 @@
     var Z={leg:0,arm:0,lean:0,aR:0,aL:0,mR:0,mL:0,lv:0,tw:.3,ts:4};
     function target(d,st,t,kick){
       if(d.pet){var Q={leg:0,arm:0,lean:0,aR:0,aL:0,mR:0,mL:0,lv:0,tw:.35,ts:4};
-        if(st==='run'){Q.leg=1;Q.lean=.08;Q.tw=.35;Q.ts=14}else if(st==='walk'){Q.leg=.55;Q.tw=.5;Q.ts=8}else if(st==='aim'){Q.tw=.9;Q.ts=12;Q.lean=-.05}
+        if(st==='run'){Q.leg=1;Q.arm=.8;Q.lean=.08}else if(st==='walk'){Q.leg=.55;Q.arm=.45}else if(st==='aim'){Q.lean=Math.sin(t*16)*.06} // sobbing: a little shake
+        Q.tw=0
         return Q}
       var g=d.gun||{kind:'none'},kind=g.kind||'none',armed=kind!=='none',melee=kind==='blade'||kind==='claw'||kind==='none',hasMuz=!!(d.muz&&d.muz.length);
       var wR=armed&&(g.side==='R'||g.twin),wL=armed&&(g.side==='L'||g.twin),P={leg:0,arm:0,lean:0,aR:0,aL:0,mR:0,mL:0,lv:melee?0:1};kick=kick||0;

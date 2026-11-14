@@ -292,11 +292,11 @@ function check(label, ok, extra) { console.log((ok ? 'PASS ' : 'FAIL ') + label 
   server.close(); fakeRpc.close();
   // agent art and the agent report, no server needed
   {
-    const artM = require('../pet.js'), { statusReport } = require('../report.js');
+    const artM = require('../sad.js'), { statusReport } = require('../report.js');
     const names = new Set(), looks = new Set();
     for (let n = 0; n < 24; n++) { const t = artM.traitsFor(n, 'unit-secret'); names.add(t.name); looks.add((() => { const m = artM.agentVoxels(n, 'unit-secret'); return JSON.stringify(m.cells.map((c) => [c[0], c[1], c[2], m.palette[c[4]]])); })()); }
     check('agents in a set each have their own name and their own picture', names.size === 24 && looks.size === 24);
-    check('even slots are dogs, odd slots are cats, and they use their own classes', [0, 1, 2, 3, 4, 5].every((n) => { const a = artM.agentFor(n, 'unit-secret'); return a.team === (n % 2 ? 'CAT' : 'DOG') && artM.ROLES[a.role].team === (n % 2 ? 'cat' : 'dog'); }));
+    check('even slots are weepers, odd slots are moper, and they use their own classes', [0, 1, 2, 3, 4, 5].every((n) => { const a = artM.agentFor(n, 'unit-secret'); return a.team === (n % 2 ? 'MOPER' : 'WEEPER') && artM.ROLES[a.role].team === (n % 2 ? 'moper' : 'weeper'); }));
     const ag = artM.agentFor(0, 'unit-secret'), ag2 = artM.agentFor(0, 'unit-secret'), ag3 = artM.agentFor(0, 'other-secret');
     check('an agent is the same every time for the same secret', JSON.stringify(ag) === JSON.stringify(ag2) && ag.name && ag.role && ag.blurb);
     check('a different secret gives a different set', [0, 1, 2, 3].some((n) => JSON.stringify(artM.agentFor(n, 'unit-secret')) !== JSON.stringify(artM.agentFor(n, 'other-secret'))) && ag3.name);
@@ -324,15 +324,15 @@ function check(label, ok, extra) { console.log((ok ? 'PASS ' : 'FAIL ') + label 
       const cc = await chainM.coinChain(mock, MINT, DEV, '');
       check('the audit reads the mint and freeze authorities', cc.authority && cc.authority.mint === null && cc.authority.freeze === 'FreezeFreezeFreeze1111');
       check('the launch scan finds early buyers and what they hold', cc.launch && cc.launch.early === 2 && cc.launch.wallets === 1 && cc.launch.heldCount === 1 && cc.launch.heldPct === 20, JSON.stringify(cc.launch));
-      const au = statusReport({ name: 'A', role: 'AUDITOR', ability: require('../pet.js').ABILITIES.AUDITOR }, {}, cc, 1).ability, hu = statusReport({ name: 'H', role: 'SNIFFER', ability: require('../pet.js').ABILITIES.SNIFFER }, {}, cc, 1).ability;
+      const au = statusReport({ name: 'A', role: 'SKEPTIC', ability: require('../sad.js').ABILITIES.SKEPTIC }, {}, cc, 1).ability, hu = statusReport({ name: 'H', role: 'SNIFFLER', ability: require('../sad.js').ABILITIES.SNIFFLER }, {}, cc, 1).ability;
       check('auditor and hunter report what they found', au.lines[0].level === 'good' && au.lines[1].level === 'warn' && hu.lines[1].level === 'warn' && /20%/.test(hu.lines[1].text));
-      const wd = statusReport({ name: 'W', role: 'MOUSER', ability: require('../pet.js').ABILITIES.MOUSER }, {}, { supply: 1e9, devHoldPct: 10, holders: [], curve: { complete: false, progress: 40, raisedSol: 30, vSol: 60, vTok: 700e6 } }, 1).ability;
+      const wd = statusReport({ name: 'W', role: 'PESSIMIST', ability: require('../sad.js').ABILITIES.PESSIMIST }, {}, { supply: 1e9, devHoldPct: 10, holders: [], curve: { complete: false, progress: 40, raisedSol: 30, vSol: 60, vTok: 700e6 } }, 1).ability;
       check('warden works out a sale from the curve reserves', /sold everything/.test(wd.lines[1].text) && /fall about/.test(wd.lines[1].text), JSON.stringify(wd.lines));
     }
-    const abs = require('../pet.js').ABILITIES, rr = (role, w) => statusReport({ name: 'X', role, ability: abs[role] }, { launchedAt: 1000 }, { curve: { complete: false, progress: 52, raisedSol: 44, marketCapSol: 80 }, devHoldPct: 3, top10Pct: 20, holderCount: 41, errors: [] }, 3 * 3600000, w).ability;
+    const abs = require('../sad.js').ABILITIES, rr = (role, w) => statusReport({ name: 'X', role, ability: abs[role] }, { launchedAt: 1000 }, { curve: { complete: false, progress: 52, raisedSol: 44, marketCapSol: 80 }, devHoldPct: 3, top10Pct: 20, holderCount: 41, errors: [] }, 3 * 3600000, w).ability;
     const hist = { first: { at: 0, cap: 50, holders: 20, dev: 8, top10: 30 }, peak: { cap: { v: 100, at: 1e5 }, holders: { v: 45, at: 2e5 }, curve: { v: 55, at: 2e5 } }, marks: { 25: 6e4 }, devMax: 8, n: 6 };
     check('every class has its own named ability', Object.keys(abs).length === 9 && new Set(Object.values(abs).map((a) => a.name)).size === 9);
-    check('abilities compare now with what the agent saw before', /up 21/.test(rr('HERDER', hist).lines[1].text) && /up 60%/.test(rr('NIGHTWATCH', hist).lines[1].text) && rr('GUARD', hist).lines.some((l) => l.level === 'warn' && /fell from 8%/.test(l.text)) && /25%/.test(rr('CURATOR', hist).lines[0].text));
+    check('abilities compare now with what the agent saw before', /up 21/.test(rr('LONER', hist).lines[1].text) && /up 60%/.test(rr('DOOMSAYER', hist).lines[1].text) && rr('WORRIER', hist).lines.some((l) => l.level === 'warn' && /fell from 8%/.test(l.text)) && /25%/.test(rr('MOURNER', hist).lines[0].text));
     check('abilities work with no history and the flagship sweeps them all', Object.keys(abs).every((k) => rr(k, null).lines.length > 0) && rr('FLAGSHIP', hist).lines.length === 11);
     const done = statusReport({ name: 'ZED', role: 'NAVIGATOR' }, {}, { curve: { complete: true, progress: 100, raisedSol: 85, marketCapSol: 400 } }, 1);
     check('a graduated coin says so', done.lines[0].level === 'good' && /graduated/.test(done.lines[0].text));

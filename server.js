@@ -1,11 +1,11 @@
 'use strict';
-// SadPad: anyone can launch a pump.fun coin. Each launch claims one of a small set of voxel cats and dogs as its logo,
+// SadPad: anyone can launch a pump.fun coin. Each launch claims one of a small set of sad voxel characters as its logo,
 // and that agent is then locked to the coin. The launcher signs everything from their own wallet.
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const art = require('./pet');
+const art = require('./sad');
 const chain = require('./chain');
 const { statusReport } = require('./report');
 
@@ -161,8 +161,8 @@ function loadBears(c) {
 function saveBears(c, d) { const f = bearsFile(c); fs.writeFileSync(f + '.tmp', JSON.stringify(d)); fs.renameSync(f + '.tmp', f); }
 const holdFor = (d, token) => { for (const k of Object.keys(d.holds)) if (d.holds[k].token === token) return { slot: k === 'F' ? 'F' : Number(k), hold: d.holds[k] }; return null; };
 const bearLabel = (slot) => (slot === 'F' ? 'founder' : slot + 1); // what the pages are told
-const FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2a1608"/><g fill="#ffb347"><ellipse cx="32" cy="42" rx="14" ry="11"/><ellipse cx="14" cy="28" rx="5.5" ry="7.5"/><ellipse cx="25" cy="16" rx="5.5" ry="7.5"/><ellipse cx="39" cy="16" rx="5.5" ry="7.5"/><ellipse cx="50" cy="28" rx="5.5" ry="7.5"/></g></svg>';
-const PRIME = { name: 'PRIME', role: 'FLAGSHIP', blurb: 'The one-of-one flagship agent. A big golden Labrador in a black top hat. Reserved for SadPad’s founder wallet.', ability: art.ABILITIES.FLAGSHIP };
+const FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0b1a2a"/><path d="M32 7C32 7 15 28 15 40a17 17 0 0 0 34 0C49 28 32 7 32 7z" fill="#8fd3ff"/><circle cx="25" cy="40" r="2.6" fill="#0b1a2a"/><circle cx="39" cy="40" r="2.6" fill="#0b1a2a"/><path d="M24 51q8-7 16 0" stroke="#0b1a2a" stroke-width="3" fill="none" stroke-linecap="round"/></svg>';
+const PRIME = { name: 'PRIME', role: 'FLAGSHIP', blurb: 'The one-of-one flagship agent. A big storm cloud in a gold crown, crying gold. Reserved for SadPad’s founder wallet.', ability: art.ABILITIES.FLAGSHIP };
 // The 3D views fetch an agent's voxels. They only depend on the image secret, so they are cached and gzipped.
 const voxCache = new Map();
 function sendVoxels(req, res, slot) {
@@ -189,7 +189,7 @@ function bearsState(res) {
   send(res, 200, {
     cluster: c.cluster, total: c.total, maxBuy: c.maxBuy, silhouette: art.silhouette(), bears, recent,
     open: bears.filter((b) => b.state === 'open').length,
-    teams: ['DOG', 'CAT'].reduce((o, t) => { const m = bears.filter((b) => b.agent.team === t); o[t] = { total: m.length, launched: m.filter((b) => b.state === 'launched').length, open: m.filter((b) => b.state === 'open').length }; return o; }, {}),
+    teams: ['WEEPER', 'MOPER'].reduce((o, t) => { const m = bears.filter((b) => b.agent.team === t); o[t] = { total: m.length, launched: m.filter((b) => b.state === 'launched').length, open: m.filter((b) => b.state === 'open').length }; return o; }, {}),
     founder: c.founderWallet ? (() => { const L = d.launched.F, H = d.holds.F; return { agent: PRIME, state: L ? 'launched' : H ? 'held' : 'reserved', short: shortAddr(c.founderWallet), symbol: L ? L.symbol : null, name: L ? L.name : null, mint: L ? L.mint : null }; })() : null,
     platform: c.platformWallet ? { wallet: c.platformWallet, bps: PLATFORM_BPS } : null,
   });
