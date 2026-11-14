@@ -69,39 +69,35 @@
     var OBS=[[-11,3.5,4.4],[10,-4.5,1.7],[-3,-6.3,1.5]]; // pond and two trees: [x,z,radius] the pets run around
     var FL=(function(){var r=rnd(5),o=[];for(var i=0;i<46;i++){var x=(r()-.5)*(AX*2+14),z=(r()-.5)*(AZ*2+10);if(Math.hypot(x+11,z-3.5)<6)continue;o.push({x:x,z:z,c:[[1,.45,.57],[1,.82,.4],[1,1,1],[.78,.63,1]][i%4],p:r()*6})}return o})();
     function reset(){rr=rnd(11);puffs=[];flies=[];var n=agents.length;
-      st=agents.map(function(o,i){var ang=i/n*Math.PI*2;return{o:o,x:Math.cos(ang)*8,z:Math.sin(ang)*4.5,yaw:ang+Math.PI/2,v:0,pause:0,boost:0,gait:i*1.3,ph:i*1.7,pose:null,run:0,rate:.92+rr()*.16,wob:rr()*6,cat:i%2===1,it:i%2===0}});
-      for(var i=0;i<7;i++)flies.push({x:(rr()-.5)*30,z:(rr()-.5)*16,a:rr()*6,s:.5+rr()*.6,c:i%3});
+      st=agents.map(function(o,i){return{o:o,x:-12+i*8+(rr()-.5)*2,z:2+rr()*6,yaw:rr()*6,v:0,pause:rr()*1.5,gait:i*1.3,ph:i*1.7,pose:null,run:0,rate:.9+rr()*.2,tx:0,tz:0,tears:rr(),cat:i%2===1}});
+      st.forEach(function(a){pickSpot(a)});
       time=0}
     reset();
+    function pickSpot(a){a.tx=-14+rr()*28;a.tz=-1+rr()*10}
     function norm(a){while(a>Math.PI)a-=2*Math.PI;while(a<-Math.PI)a+=2*Math.PI;return a}
     function step(dt){
-      time+=dt;var n=st.length;
-      // pets run in pairs, a dog and a cat: one chases the other, and when it is caught up they swap
-      st.forEach(function(a,i){
-        var pr=st[i^1]||st[(i+1)%n],dx=pr.x-a.x,dz=pr.z-a.z,d=Math.hypot(dx,dz)||1,hx=(i>>1)?8:-4,hz=(i>>1)?.5:-1,sx,sz;
-        if(a.it){sx=dx/d*1.2;sz=dz/d*1.2}
-        else{var k=Math.max(0,Math.min(1,(9-d)/9))*1.3;sx=-dx/d*k;sz=-dz/d*k;var cr=Math.hypot(a.x-hx,(a.z-hz)*1.5)||1;sx+=(a.z-hz)/cr*.9;sz-=(a.x-hx)/cr*.9}
-        var hd=Math.hypot(a.x-hx,a.z-hz);if(hd>7){sx-=(a.x-hx)/hd*(hd-7)*.35;sz-=(a.z-hz)/hd*(hd-7)*.35}
-        OBS.forEach(function(o){var ox=a.x-o[0],oz=a.z-o[1],od=Math.hypot(ox,oz)||1,r=o[2]+2.4;if(od<r){var k=(r-od)/r*6.5;sx+=ox/od*k;sz+=oz/od*k}});
-        if(a.x>AX-4)sx-=(a.x-AX+4)*.8;if(a.x<-AX+4)sx+=(-AX+4-a.x)*.8;if(a.z>AZ-3)sz-=(a.z-AZ+3)*1.1;if(a.z<-AZ+3)sz+=(-AZ+3-a.z)*1.1;
-        var cr=Math.hypot(a.x/1.6,a.z)||1;sx+=a.z/cr*.7;sz-=a.x/1.6/cr*.7; // everyone circles the park, so the chase spreads out
-        sx+=Math.sin(time*.9+a.wob)*.25;sz+=Math.cos(time*.7+a.wob*1.3)*.25;
-        if(a.pause>0){a.pause-=dt;a.v=Math.max(0,a.v-dt*16)}
+      time+=dt;
+      // everyone wanders slowly round the park, stops now and then for a good cry, and keeps out of the pond and each other's way
+      st.forEach(function(a){
+        var dx=a.tx-a.x,dz=a.tz-a.z,d=Math.hypot(dx,dz)||1,sx=dx/d,sz=dz/d;
+        OBS.forEach(function(o){var ox=a.x-o[0],oz=a.z-o[1],od=Math.hypot(ox,oz)||1,r=o[2]+2.4;if(od<r){var k=(r-od)/r*6;sx+=ox/od*k;sz+=oz/od*k}});
+        st.forEach(function(o){if(o===a)return;var ox=a.x-o.x,oz=a.z-o.z,od=Math.hypot(ox,oz)||1;if(od<7){var k=(7-od)/7*3;sx+=ox/od*k;sz+=oz/od*k}});
+        if(a.pause>0){a.pause-=dt;a.v=Math.max(0,a.v-dt*10);if(a.pause<=0)pickSpot(a)}
         else{
-          var want=Math.atan2(sx,sz),da=norm(want-a.yaw);a.yaw+=Math.max(-4.2*dt,Math.min(4.2*dt,da));
-          var sp=a.rate*4.2*(1+.16*Math.sin(time*.9+a.wob))*(1+a.boost*.5)*Math.max(.35,1-Math.abs(da)/2.2);a.v+=(sp-a.v)*Math.min(1,dt*5);
-          // caught up: a tag. The chaser stops for a play bow, then the two swap roles
-          if(a.it&&d<2.6&&pr.pause<=0){a.pause=1+rr()*.8;pr.pause=.5;pr.boost=1;a.it=false;pr.it=true;puffs.push({x:(a.x+pr.x)/2,z:(a.z+pr.z)/2,t:time,c:a.cat?[.7,.6,1]:[.56,.83,1]})}}
-        a.boost=Math.max(0,a.boost-dt*.9);
-        st.forEach(function(o){if(o===a)return;var ox=a.x-o.x,oz=a.z-o.z,od=Math.hypot(ox,oz);if(od<3.6&&od>.01){var k=(3.6-od)*dt*3;a.x+=ox/od*k;a.z+=oz/od*k}});
+          var want=Math.atan2(sx,sz),da=norm(want-a.yaw);a.yaw+=Math.max(-2.4*dt,Math.min(2.4*dt,da));
+          var sp=a.rate*2.1*Math.max(.3,1-Math.abs(da)/2);a.v+=(sp-a.v)*Math.min(1,dt*3);
+          if(d<1.2)a.pause=1.5+rr()*2.5}
         a.x+=Math.sin(a.yaw)*a.v*dt;a.z+=Math.cos(a.yaw)*a.v*dt;
-        a.x=Math.max(-AX+1.5,Math.min(AX-1.5,a.x));a.z=Math.max(-AZ+1.2,Math.min(AZ-1.2,a.z));
-        a.gait+=a.v*dt*1.9;
-        var play=a.pause>0,stt=play?'aim':(a.v>2.6?'run':'walk'),dat=a.o.data;
-        var tp=MechPose.target(dat,stt,time+a.ph,0);a.pose=a.pose?MechPose.blend(a.pose,tp,Math.min(1,dt*7)):tp;a.run+=((stt==='run'?1:0)-a.run)*Math.min(1,dt*6);
+        a.x=Math.max(-AX+2,Math.min(AX-2,a.x));a.z=Math.max(-AZ+1.5,Math.min(AZ+1,a.z));
+        a.gait+=a.v*dt*1.6;
+        var stt=a.pause>0?'aim':'walk',dat=a.o.data;
+        var tp=MechPose.target(dat,stt,time+a.ph,0);a.pose=a.pose?MechPose.blend(a.pose,tp,Math.min(1,dt*6)):tp;a.run=0;
+        // tears fall from the face
+        a.tears+=dt*(a.pause>0?9:4);
+        while(a.tears>1){a.tears-=1;var fc=a.o.data.face||{y:20,z:22,x:3},sp2=S*1.1/(a.o.data.zoom||1),cyw=Math.cos(a.yaw),syw=Math.sin(a.yaw),lx=(rr()<.5?-1:1)*fc.x*sp2,lz=(fc.z-16+1.2)*sp2;
+          puffs.push({x:a.x+cyw*lx+syw*lz,y:(fc.y-.5)*sp2+.5*sp2,z:a.z-syw*lx+cyw*lz,vy:0,t:time,c:[.56,.83,1]})}
       });
-      puffs=puffs.filter(function(q){return time-q.t<.9});
-      flies.forEach(function(f){f.a+=dt*(1.5+Math.sin(time+f.s)*1.2);f.x+=Math.cos(f.a)*f.s*dt*3;f.z+=Math.sin(f.a*.8)*f.s*dt*2.2;if(f.x>AX+3)f.x=-AX-3;if(f.x<-AX-3)f.x=AX+3;if(f.z>AZ+2)f.z=-AZ-2;if(f.z<-AZ-2)f.z=AZ+2});
+      puffs=puffs.filter(function(q){q.vy+=dt*9;q.y-=q.vy*dt;if(q.y<.1){return false}return true});
     }
     function tree(x,z,s,t,k){var sw=Math.sin(t*.8+k)*.04*s;
       bx(x,.02,z,5.2*s,.03,5.2*s,[.08,.2,.14]);
@@ -113,8 +109,8 @@
       gl.viewport(0,0,cw,ch);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.clearColor(.1,.15,.2,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
       var t=time,asp=cw/ch,narrow=asp<.9;
       // high camera looking steeply down, drifting slowly
-      var cx=Math.sin(t*.22)*3,eye=[cx,(narrow?60:36),(narrow?29:20)+Math.cos(t*.17)*1.2],tgt=[cx,0,-1.5];
-      gl.uniformMatrix4fv(uVP,false,mul(persp(narrow?48:40,asp,.5,260),look(eye,tgt)));
+      var cx=Math.sin(t*.2)*2.5,eye=[cx,(narrow?24:15),(narrow?44:31)+Math.cos(t*.15)*.8],tgt=[cx,(narrow?3:3.4),2.5];
+      gl.uniformMatrix4fv(uVP,false,mul(persp(narrow?44:36,asp,.5,260),look(eye,tgt)));
       var WOOD=[.34,.3,.28],RAIL=[.58,.6,.64];
       // a soaked lawn, a wet gravel path, and clouds drifting over
       bx(0,-.2,0,AX*2+34,.2,AZ*2+26,[.13,.28,.2]);
@@ -139,16 +135,16 @@
       // an empty bench and a forgotten umbrella
       bx(3,.7,AZ-.4,4.2,.25,1.1,WOOD);bx(3,1.35,AZ-.95,4.2,1,.2,WOOD);bx(1.2,.35,AZ-.4,.3,.7,1,[.2,.22,.28]);bx(4.8,.35,AZ-.4,.3,.7,1,[.2,.22,.28]);
       bx(-5,.18,7,3.4,.3,2.6,[.22,.28,.55]);bx(-5,.4,7,2.2,.25,1.6,[.28,.36,.66]);bx(-2.9,.12,7.4,2.2,.1,.1,[.2,.2,.24]);
-      // tear drops, little rings when one pet reaches another
-      puffs.forEach(function(q){var u=(t-q.t)/.9,r=u*2.8,y=1.4+Math.sin(Math.PI*u)*2;for(var k=0;k<7;k++){var an=k/7*Math.PI*2+u*2;draw(box,trs(q.x+Math.cos(an)*r,y+(k%2)*.5,q.z+Math.sin(an)*r,t*5+k,0,.4*(1-u*.6),.55*(1-u*.6),.4*(1-u*.6)),{col:k%2?[.7,.88,1]:q.c,emit:true,boost:.7})}});
+      // tears falling to the grass
+      puffs.forEach(function(q){draw(box,trs(q.x,q.y,q.z,0,0,.22,.4,.22),{col:q.c,emit:true,boost:.9})});
       // the pets: each wears a little marker, blue for the weepers and violet for the mopers
       st.forEach(function(a,i){
         var bob=Math.abs(Math.sin(a.gait))*(.1+.25*a.run)*Math.min(1,a.v*.4),roll=Math.sin(t*7+a.ph)*.02*Math.min(1,a.v*.4);
-        var sp=a.o.data&&a.o.data.pet?S*.9/(a.o.data.zoom||1):S;
+        var sp=a.o.data&&a.o.data.pet?S*1.1/(a.o.data.zoom||1):S;
         bx(a.x,.05,a.z,3.2,.03,2.2,[.06,.14,.1]);
         draw(a.o,trs(a.x,.5*sp+bob+.02,a.z,a.yaw,roll,sp,sp,sp),{pose:a.pose,ph:a.gait});
-        var mc=a.cat?[.62,.45,1]:[.4,.7,1],sy=Math.sin(t*3+i);
-        draw(box,trs(a.x,7.1+bob+sy*.15,a.z,t*2+i,0,.7,.7,.7),{col:mc,emit:true,boost:.5+.3*sy});
+        
+        
       });
       // rain, over everything
       for(var rI=0;rI<150;rI++){var rx=((rI*37.7)%(AX*2+16))-AX-8,rz=((rI*53.3)%(AZ*2+14))-AZ-7,ry=16-((t*13+rI*2.3)%16);bx(rx+(16-ry)*.12,ry,rz,.05,.9,.05,[.65,.8,1])}

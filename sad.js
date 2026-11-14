@@ -134,6 +134,7 @@ class Vox {
 // the sad face, drawn on the front plane z = zf: eyes looking down, brows tilted up in the middle, a frown and tears
 function face(v, o) {
   const { zf, ex, ey, my } = o, X = 16 + ex;
+  v.face = { y: ey, z: zf, x: X + 1 - CX };
   v.mb(X, ey, zf, X + 1, ey + 1, zf, o.eye || '#ffffff', o.eyeE);
   if (o.pupil !== null) v.mb(X, ey, zf, X, ey, zf, o.pupil || INK, 0);
   v.mb(X, ey + 3, zf, X, ey + 3, zf, o.brow || INK, o.eyeE); v.mb(X + 1, ey + 2, zf, X + 1, ey + 2, zf, o.brow || INK, o.eyeE);
@@ -247,7 +248,7 @@ function finish(v, extra) {
     cells.push([q.x, q.y, q.z, q.e + 2 * q.g, pi]);
   }
   cells.sort((a, b) => a[1] - b[1] || a[2] - b[2] || a[0] - b[0]);
-  return Object.assign({ pet: true, zoom: 0.8, w: W, h: H, d: D, cx: CX, cz: CZ, pivot: [v.pv.leg, v.pv.arm], pz: [16, 16], tailZ: 0, gun: null, muz: [], palette, cells }, extra || {});
+  return Object.assign({ pet: true, zoom: 0.8, w: W, h: H, d: D, cx: CX, cz: CZ, pivot: [v.pv.leg, v.pv.arm], pz: [16, 16], tailZ: 0, gun: null, muz: [], face: v.face || null, palette, cells }, extra || {});
 }
 const modelCache = new Map();
 function agentVoxels(slot, secret) {
