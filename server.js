@@ -176,6 +176,28 @@ function sendVoxels(req, res, slot) {
 }
 const shortAddr = (a) => a.slice(0, 4) + '…' + a.slice(-4);
 
+// BTC / SOL spot prices for the header ticker (cached 30s, tries several free sources)
+let PRICES = { t: 0, v: null };
+async function fetchPrices() {
+  const get = async (u) => { const r = await fetch(u, { signal: AbortSignal.timeout(6000), headers: { Accept: 'application/json' } }); if (!r.ok) throw new Error(String(r.status)); return r.json(); };
+  const tries = [
+    async () => { const [b, s] = await Promise.all([get('https://api.coinbase.com/v2/prices/BTC-USD/spot'), get('https://api.coinbase.com/v2/prices/SOL-USD/spot')]); return { btc: +b.data.amount, sol: +s.data.amount }; },
+    async () => { const j = await get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,solana&vs_currencies=usd'); return { btc: +j.bitcoin.usd, sol: +j.solana.usd }; },
+    async () => { const [b, s] = await Promise.all([get('https://api.binance.us/api/v3/ticker/price?symbol=BTCUSDT'), get('https://api.binance.us/api/v3/ticker/price?symbol=SOLUSDT')]); return { btc: +b.price, sol: +s.price }; },
+  ];
+  for (const t of tries) { try { const v = await t(); if (v.btc > 0 && v.sol > 0) return v; } catch (e) {} }
+  return null;
+}
+async function pricesApi(res) {
+  if (!PRICES.v || Date.now() - PRICES.t > 30000) {
+    const v = await fetchPrices();
+    if (v) PRICES = { t: Date.now(), v };
+    else if (!PRICES.v) PRICES.t = Date.now() - 20000; // retry again in ~10s
+  }
+  const body = PRICES.v ? { btc: PRICES.v.btc, sol: PRICES.v.sol, t: PRICES.t } : { btc: null, sol: null, t: 0 };
+  return send(res, 200, JSON.stringify(body), { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+}
+
 function bearsState(res) {
   const c = cfg(), d = loadBears(c);
   const bears = [];
@@ -539,6 +561,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && p === '/api/rpc/mainnet') return await rpcProxy(req, res);
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, 'Method not allowed');
     if (p === '/api/bears') return bearsState(res);
+    if (p === '/api/prices') return await pricesApi(res);
     { const m = /^\/api\/coin\/([1-9A-HJ-NP-Za-km-z]{32,44})$/.exec(p); if (m) return await coinInfo(res, m[1]); }
     if (/^\/coin\/[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(p)) { res.writeHead(200, { 'Content-Type': MIME['.html'], 'Cache-Control': 'no-cache', 'X-Frame-Options': 'DENY', 'X-Content-Type-Options': 'nosniff' }); return res.end(fs.readFileSync(COIN_PAGE)); }
     if (p === '/admin') { res.writeHead(200, { 'Content-Type': MIME['.html'], 'Cache-Control': 'no-store', 'X-Frame-Options': 'DENY', 'X-Content-Type-Options': 'nosniff', 'X-Robots-Tag': 'noindex' }); return res.end(fs.readFileSync(path.join(__dirname, 'admin.html'))); }

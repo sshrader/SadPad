@@ -24,6 +24,12 @@ padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:20px}
 .logo svg{width:28px;height:28px}
+.ticker{display:flex;align-items:center;gap:14px;margin-left:auto;font:600 14px var(--mono)}
+.ticker .tk{display:inline-flex;align-items:center;gap:7px;padding:4px 10px 4px 6px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03)}
+.ticker .tk svg{flex:none}
+.ticker .tk b{font-weight:600;transition:color .4s}
+.ticker .tk.up b{color:#6fe3a0}.ticker .tk.dn b{color:#ff8f8f}
+@media(max-width:560px){.ticker{order:3;width:100%;margin-left:0;justify-content:flex-start}}
 .net{font:500 13px var(--mono);letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);padding:3px 8px;color:var(--gold);margin-left:6px}
 .net.main{color:var(--bad);border-color:var(--bad)}
 .wallet{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface2);color:var(--fg);border-radius:99px;padding:8px 16px;font-family:var(--mono);font-size:13px;cursor:pointer}
@@ -120,6 +126,10 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
 <div class="wrap">
 <header>
   <div class="logo"><span id="logoicon" style="display:inline-flex;width:28px;height:28px"></span>SadPad<span class="net" id="net">devnet</span></div>
+  <div class="ticker" id="ticker" hidden>
+    <span class="tk" title="Bitcoin"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#f7931a"/><text x="16" y="23" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="700" font-size="21" fill="#fff">₿</text></svg><b id="pbtc">…</b></span>
+    <span class="tk" title="Solana"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><defs><linearGradient id="solg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9945ff"/><stop offset="1" stop-color="#14f195"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="#12141c"/><g fill="url(#solg)"><path d="M10 20h13l-2 2.800H8zM10 9.200h13l-2 2.800H8zM8 14.600h13l2 2.800H10z"/></g></svg><b id="psol">…</b></span>
+  </div>
   <button class="wallet" id="wbtn" type="button"><span id="wlabel">Connect Phantom</span></button>
 </header>
 
@@ -481,6 +491,28 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
       running=false;$('go').disabled=false;
     }
   });
+})();
+
+/* BTC / SOL ticker */
+(function(){
+  const box=document.getElementById('ticker'),eb=document.getElementById('pbtc'),es=document.getElementById('psol');
+  if(!box)return;
+  const last={};
+  const fmt=(n,d)=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  function put(el,key,val,d){
+    if(!(val>0))return;
+    const tk=el.parentNode;
+    if(last[key]!=null&&val!==last[key]){tk.classList.remove('up','dn');tk.classList.add(val>last[key]?'up':'dn');}
+    last[key]=val;el.textContent=key==='btc'?'$'+(val/1000).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})+'K':fmt(val,2);
+    tk.title=(key==='btc'?'Bitcoin ':'Solana ')+fmt(val,2);
+  }
+  async function tick(){
+    try{
+      const r=await fetch('/api/prices',{cache:'no-store'});const j=await r.json();
+      if(j&&j.btc>0&&j.sol>0){put(eb,'btc',j.btc,0);put(es,'sol',j.sol,2);box.hidden=false;}
+    }catch(e){}
+  }
+  tick();setInterval(tick,30000);
 })();
 </script>
 </body>
