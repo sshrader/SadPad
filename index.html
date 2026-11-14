@@ -138,7 +138,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
 
 <div id="recent" hidden><h2>Recent launches</h2><div class="recent" id="recentlist"></div></div>
 
-<h2>PRIME</h2>
+<h2>SadPad</h2>
 <div class="founder" id="founder" hidden></div>
 
 <h2>Weepers & Mopers</h2>
@@ -236,7 +236,7 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
   var st=null,pubkey=null,pickSlot=null,running=false,steps=[];
   function short(a){return a.slice(0,4)+'…'+a.slice(-4)}
   function prev(n){return n==='F'?'/api/founder.png':'/api/preview/'+n+'.png'}
-  function bearName(n){if(n==='founder'||n==='F')return 'PRIME';var a=st&&st.bears&&st.bears.filter(function(b){return b.n===n})[0];return a&&a.agent?a.agent.name:'Agent #'+String(n).padStart(2,'0')}
+  function bearName(n){if(n==='founder'||n==='F')return 'SadPad';var a=st&&st.bears&&st.bears.filter(function(b){return b.n===n})[0];return a&&a.agent?a.agent.name:'Agent #'+String(n).padStart(2,'0')}
   function phantom(){var p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)}
   function say(t,cls){var m=$('msg');m.textContent=t||'';m.className='msg'+(cls?' '+cls:'')}
   function bearIcon(runs,fill){
@@ -270,27 +270,27 @@ footer button{background:none;border:0;color:var(--gold);font:inherit;cursor:poi
   }
   var feeNoteBase='';
   function showPick(){
-    $('pick').textContent=pickSlot==='founder'?'PRIME, the flagship agent. One of one.':pickSlot?(bearName(pickSlot)+' is yours if you launch now.'):'Random friend, chosen when you launch.';
+    $('pick').textContent=pickSlot==='founder'?'SadPad, the flagship agent. One of one.':pickSlot?(bearName(pickSlot)+' is yours if you launch now.'):'Random friend, chosen when you launch.';
     $('customlogo').hidden=!(st&&st.founder&&(pickSlot==='founder'||(pubkey&&short(pubkey)===st.founder.short)));
     $('feenote').textContent=pickSlot==='founder'?'Founder launch: all creator fees go to your wallet.':feeNoteBase;
   }
   function drawFounder(){
     var f=st&&st.founder,box=$('founder');
-    box.hidden=!f;[].slice.call(document.querySelectorAll('h2')).forEach(function(h){if(h.textContent==='PRIME')h.hidden=!f});
+    box.hidden=!f;[].slice.call(document.querySelectorAll('h2')).forEach(function(h){if(h.textContent==='SadPad')h.hidden=!f});
     if(!f)return;box.textContent='';
-    var im=document.createElement('img');im.src='/api/founder.png';im.alt='PRIME, the flagship: a big storm cloud in a gold crown, crying gold';box.appendChild(im);if(window.VoxelView)VoxelView.card(im,'/api/founder/voxels.json',{radius:'8px',max:14});
+    var im=document.createElement('img');im.src='/api/founder.png';im.alt='SadPad, the flagship: a big storm cloud in a gold crown, crying gold';box.appendChild(im);if(window.VoxelView)VoxelView.card(im,'/api/founder/voxels.json',{radius:'8px',max:14});
     var d=document.createElement('div'),tg=document.createElement('div'),h=document.createElement('h3'),p=document.createElement('p');
     tg.className='tag';tg.textContent='Flagship · one of one';d.appendChild(tg);
     if(f.state==='launched'){
-      h.textContent=(f.name||'PRIME coin')+' · $'+f.symbol;p.textContent='PRIME is locked to SadPad’s own coin.';d.appendChild(h);d.appendChild(p);
+      h.textContent=(f.name||'SadPad coin')+' · $'+f.symbol;p.textContent='The flagship is locked to SadPad’s own coin.';d.appendChild(h);d.appendChild(p);
       if(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(f.mint||'')){var a=document.createElement('a');a.className='btn go';a.href='/coin/'+f.mint;a.textContent='Open the coin page';d.appendChild(a)}
     }else{
-      h.textContent='PRIME';
+      h.textContent='SadPad';
       p.textContent=f.state==='held'?'The flagship coin is being launched right now.':'A big storm cloud in a gold crown, crying gold. Not in the numbered set, and reserved for SadPad’s founder wallet ('+f.short+').';
       d.appendChild(h);d.appendChild(p);
       if(f.agent&&f.agent.ability){var pa=document.createElement('p');pa.style.cssText='margin:6px 0 0;font-size:14px;color:var(--dim)';var pb=document.createElement('b');pb.style.color='var(--gold)';pb.textContent='Special ability: '+f.agent.ability.name+'. ';pa.appendChild(pb);pa.appendChild(document.createTextNode(f.agent.ability.does));d.appendChild(pa)}
-      if(f.state==='reserved'&&pubkey&&short(pubkey)===f.short){var b=document.createElement('button');b.type='button';b.className='btn go';b.textContent=pickSlot==='founder'?'PRIME selected':'Launch the PRIME coin';
-        b.addEventListener('click',function(){pickSlot='founder';drawBears();drawFounder();showPick();say('PRIME selected. Fill in the coin details below and launch.','ok');$('nm').scrollIntoView({behavior:'smooth',block:'center'})});d.appendChild(b)}
+      if(f.state==='reserved'&&pubkey&&short(pubkey)===f.short){var b=document.createElement('button');b.type='button';b.className='btn go';b.textContent=pickSlot==='founder'?'SadPad selected':'Launch the SadPad coin';
+        b.addEventListener('click',function(){pickSlot='founder';drawBears();drawFounder();showPick();say('SadPad selected. Fill in the coin details below and launch.','ok');$('nm').scrollIntoView({behavior:'smooth',block:'center'})});d.appendChild(b)}
     }
     box.appendChild(d);
   }

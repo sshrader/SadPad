@@ -10,7 +10,7 @@ This is its own service: its own data volume, env vars and domain. It lives at t
 - **Sad friends:** 3D voxel characters built by code (`sad.js`): a rain cloud, ghost, clown and onion (the weepers) and a robot, cactus, slice of toast and blob (the moper). Each has colour sets, tears or a frown and sometimes a beanie, a plaster or a tired flower. Even slots are weepers and odd slots are mopers, so the teams stay level. They run, walk and sob in 3D; the home page keeps a Weepers & Mopers scoreboard.
 - **Classes:** weepers are `SNIFFLER`, `MOURNER`, `LONER`, `DIARIST`; mopers are `WORRIER`, `DOOMSAYER`, `PESSIMIST`, `SKEPTIC`. Each maps to a report in `report.js` (`ability.fn`) that works from real chain numbers.
 - **The agent report** (`report.js`) is on every coin page. It turns the numbers read from the chain into plain sentences: curve progress and milestones, market cap, dev share, top-10 concentration, holder count, and flags for a large dev or concentrated holders. It only reads public data. It does not trade, hold funds, predict prices or give advice, and the page says so. It is built from the same cached chain read as the rest of the coin page.
-- **PRIME:** one flagship outside the numbered set, a big storm cloud in a gold crown that cries gold, launchable only by `FOUNDER_WALLET`.
+- **SadPad (flagship):** one flagship outside the numbered set, a big storm cloud in a gold crown that cries gold, launchable only by `FOUNDER_WALLET`.
 - **Reserve, then lock:** picking an agent holds it for 15 minutes. After the launch lands, the server reads the transaction from the chain (signed by that wallet, includes the new mint and the pump.fun program) and only then locks the agent to the coin.
 - **Recent launches**, the **Creator fees** panel and **coin pages** (`/coin/<mint>`) are on the same pages. The fee payout calls were written from pump.fun's docs and need a devnet check.
 - **The logo** is the held character, drawn by the server as a 512 by 512 PNG. The founder wallet may upload its own logo instead (the browser squares it to a 512 px PNG; the server refuses it from anyone else).
@@ -36,7 +36,7 @@ Needs Node 20 or newer. The server itself uses no packages; only the browser lau
 | `RPC_URL` | Your private **mainnet** RPC URL (for example Helius). Used only when `CLUSTER=mainnet`. A Helius URL also gives full holder counts. |
 | `DEVNET_RPC_URL` | Optional private devnet endpoint. Devnet never reads from `RPC_URL`. |
 | `PLATFORM_WALLET` | Receives 5% of each coin's creator fees. If unset, there is no split. |
-| `FOUNDER_WALLET` | The one wallet that may launch PRIME. |
+| `FOUNDER_WALLET` | The one wallet that may launch the flagship. |
 | `SLOTS` | How many characters exist, 1 to 100. Default 4. |
 | `PUBLIC_URL` | This service's domain, used in each coin's metadata and logo links. Set it before any mainnet launch: those links are permanent. |
 | `IMAGE_SECRET` | Optional. Decides how each agent looks and is named. If unset, one is created in the data folder. |

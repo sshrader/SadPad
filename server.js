@@ -33,7 +33,7 @@ const cfg = () => ({
   total: Math.min(100, Math.max(1, parseInt(process.env.SLOTS, 10) || 4)),
   platformWallet: B58_RE.test((process.env.PLATFORM_WALLET || '').trim()) ? process.env.PLATFORM_WALLET.trim() : '',
   maxBuy: process.env.CLUSTER === 'mainnet' ? 10 : 5,
-  // The one wallet that may launch the special PRIME agent (not part of the numbered set).
+  // The one wallet that may launch the special flagship agent (not part of the numbered set).
   founderWallet: B58_RE.test((process.env.FOUNDER_WALLET || '').trim()) ? process.env.FOUNDER_WALLET.trim() : '',
 });
 // Each network reads from its own endpoint. RPC_URL is for mainnet only, so a mainnet key is never used to read devnet.
@@ -162,7 +162,7 @@ function saveBears(c, d) { const f = bearsFile(c); fs.writeFileSync(f + '.tmp', 
 const holdFor = (d, token) => { for (const k of Object.keys(d.holds)) if (d.holds[k].token === token) return { slot: k === 'F' ? 'F' : Number(k), hold: d.holds[k] }; return null; };
 const bearLabel = (slot) => (slot === 'F' ? 'founder' : slot + 1); // what the pages are told
 const FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0b1a2a"/><path d="M32 7C32 7 15 28 15 40a17 17 0 0 0 34 0C49 28 32 7 32 7z" fill="#8fd3ff"/><circle cx="25" cy="40" r="2.6" fill="#0b1a2a"/><circle cx="39" cy="40" r="2.6" fill="#0b1a2a"/><path d="M24 51q8-7 16 0" stroke="#0b1a2a" stroke-width="3" fill="none" stroke-linecap="round"/></svg>';
-const PRIME = { name: 'PRIME', role: 'FLAGSHIP', blurb: 'The one-of-one flagship agent. A big storm cloud in a gold crown, crying gold. Reserved for SadPad’s founder wallet.', ability: art.ABILITIES.FLAGSHIP };
+const PRIME = { name: 'SadPad', role: 'FLAGSHIP', blurb: 'The one-of-one flagship agent. A big storm cloud in a gold crown, crying gold. Reserved for SadPad’s founder wallet.', ability: art.ABILITIES.FLAGSHIP };
 // The 3D views fetch an agent's voxels. They only depend on the image secret, so they are cached and gzipped.
 const voxCache = new Map();
 function sendVoxels(req, res, slot) {
@@ -244,7 +244,7 @@ async function reserve(req, res) {
     // The Founder bear is not in the numbered set. Only FOUNDER_WALLET can take it, and only once per network.
     if (!c.founderWallet || wallet !== c.founderWallet) { saveBears(c, d); return send(res, 403, { error: 'That agent is reserved for SadPad founder.' }); }
     if (d.launched.F) { saveBears(c, d); return send(res, 409, { error: 'The founder coin has already been launched.' }); }
-    if (d.holds.F) { saveBears(c, d); return send(res, 409, { error: 'The PRIME agent is being launched right now.' }); }
+    if (d.holds.F) { saveBears(c, d); return send(res, 409, { error: 'The flagship is being launched right now.' }); }
     slot = 'F';
   } else {
     const free = [];
@@ -417,7 +417,7 @@ async function adminState(req, res) {
   };
   const bears = [];
   for (let i = 0; i < c.total; i++) bears.push(row(String(i), 'Agent #' + String(i + 1).padStart(2, '0')));
-  if (c.founderWallet || d.launched.F || d.holds.F) bears.unshift(row('F', 'PRIME'));
+  if (c.founderWallet || d.launched.F || d.holds.F) bears.unshift(row('F', 'SadPad'));
   send(res, 200, { cluster: c.cluster, total: c.total, founderWallet: c.founderWallet || null, platformWallet: c.platformWallet || null, bears });
 }
 

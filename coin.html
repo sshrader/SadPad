@@ -150,7 +150,7 @@ td .mini>div{height:100%;background:var(--gold)}
     $('pic').src=j.bear==='F'?'/api/founder.png':'/api/preview/'+j.bear+'.png';$('pic').alt=j.name;if(window.VoxelView)VoxelView.card($('pic'),j.bear==='F'?'/api/founder/voxels.json':'/api/agent/'+j.bear+'/voxels.json',{radius:'6px'});
     $('name').textContent=j.name;$('tick').textContent='$'+j.symbol;
     var chips=$('chips');chips.textContent='';
-    chips.appendChild(el('span','chip'+(j.founder?' good':''),j.founder?'PRIME · flagship, one of one':((j.agent?j.agent.name+' · '+j.agent.role.toLowerCase():'Agent #'+String(j.bear).padStart(2,'0'))+' · '+String(j.bear).padStart(2,'0')+' of '+j.total)));
+    chips.appendChild(el('span','chip'+(j.founder?' good':''),j.founder?'SadPad · flagship, one of one':((j.agent?j.agent.name+' · '+j.agent.role.toLowerCase():'Agent #'+String(j.bear).padStart(2,'0'))+' · '+String(j.bear).padStart(2,'0')+' of '+j.total)));
     chips.appendChild(el('span','chip'+(cv&&cv.complete?' good':''),cv?(cv.complete?'Graduated':'On the bonding curve'):'Curve not read'));
     $('desc').textContent=j.description||'';
     var ab=$('agentbox');ab.textContent='';
